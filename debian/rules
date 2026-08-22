@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+# capt6000 -- Debian packaging rules
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Builds with the project Makefile and installs the tree under /usr.
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	dh_auto_install -- PREFIX=/usr
+
+# CUPS runs a backend as root only when it is not group/other accessible.
+# The USB backend needs raw device access, so keep it mode 0700.
+override_dh_fixperms:
+	dh_fixperms
+	chmod 0700 debian/capt6000/usr/lib/cups/backend/capt

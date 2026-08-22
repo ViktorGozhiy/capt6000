@@ -1,0 +1,5 @@
+# The USB backend must run as root to get raw libusb access to the printer.
+# CUPS runs a backend as root only when it is not group- or world-accessible,
+# so mode 0700 is intentional and required, not a packaging mistake.
+capt6000: executable-is-not-world-readable 0700 [usr/lib/cups/backend/capt]
+capt6000: non-standard-executable-perm 0700 != 0755 [usr/lib/cups/backend/capt]

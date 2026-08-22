@@ -1,0 +1,27 @@
+Source: capt6000
+Section: utils
+Priority: optional
+Maintainer: Viktor Hozhyi <30889176+ViktorGozhiy@users.noreply.github.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ libcups2-dev,
+ libcupsimage2-dev,
+ libusb-1.0-0-dev,
+ pkg-config
+Standards-Version: 4.6.2
+Homepage: https://github.com/ViktorGozhiy/capt6000
+Rules-Requires-Root: no
+
+Package: capt6000
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ cups
+Description: CUPS driver for Canon LBP6000/LBP6018 laser printers
+ A free CUPS filter and backend for Canon laser printers that only speak the
+ proprietary CAPT protocol (version 3, with Hi-SCoA compression), such as the
+ LBP6000 and LBP6018.
+ .
+ The package installs the PPD, the raster filter, the USB backend, and the
+ diagnostic tools captstat, captdump and captwire.

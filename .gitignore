@@ -16,3 +16,11 @@ testdata/*.pbm
 testdata/*.png
 testdata/*.bin
 testdata/*.log
+
+# Debian packaging build artefacts
+/debian/capt6000/
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/*.substvars
+/debian/*.debhelper.log

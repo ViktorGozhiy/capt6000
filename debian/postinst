@@ -1,0 +1,20 @@
+#!/bin/sh
+# capt6000 -- refresh CUPS so it picks up the new backend, filter and PPD.
+# SPDX-License-Identifier: GPL-3.0-or-later
+set -e
+
+case "$1" in
+    configure)
+        # A freshly installed backend only shows up in "lpinfo -v" once
+        # cupsd has re-scanned its backend directory.  Nudge it if running.
+        if command -v deb-systemd-invoke >/dev/null 2>&1; then
+            deb-systemd-invoke try-restart cups.service >/dev/null 2>&1 || true
+        elif command -v invoke-rc.d >/dev/null 2>&1; then
+            invoke-rc.d cups try-restart >/dev/null 2>&1 || true
+        fi
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0
