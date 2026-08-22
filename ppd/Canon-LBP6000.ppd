@@ -1,0 +1,166 @@
+*PPD-Adobe: "4.3"
+*%% Canon LBP6000/LBP6018 -- capt6000 driver
+*%% SPDX-License-Identifier: GPL-3.0-or-later
+*%%
+*%% Copyright (C) 2026  Viktor Hozhyi <https://github.com/ViktorGozhiy/capt6000>
+*%%
+*%% The page geometry below reproduces measurements of Canon's own
+*%% driver published by the captdriver project:
+*%%   Copyright (C) 2020  Moses Chong
+*%%
+*%% This program is free software under the terms of the GNU General
+*%% Public License, version 3 or any later version; see the file
+*%% LICENSE.  There is NO WARRANTY, to the extent permitted by law.
+*%%
+*%% The imageable areas below are not arbitrary.  They are the imaging
+*%% windows Canon's own driver asks the engine for, expressed in points,
+*%% and shrunk by the one column / two rows that the CUPS raster
+*%% interpreter adds, so that the RIP hands the filter exactly the
+*%% 592x6776 (A4) raster the printer expects.
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageVersion: English
+*LanguageEncoding: ISOLatin1
+*PCFileName: "CNLBP600.PPD"
+*Manufacturer: "Canon"
+*Product: "(Canon LBP6000)"
+*Product: "(Canon LBP6018)"
+*ModelName: "Canon LBP6000"
+*ShortNickName: "Canon LBP6000 capt6000"
+*NickName: "Canon LBP6000/LBP6018, capt6000 1.0"
+*PSVersion: "(3010.000) 0"
+*LanguageLevel: "3"
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*FileSystem: False
+*Throughput: "18"
+*LandscapeOrientation: Plus90
+*TTRasterizer: Type42
+*cupsVersion: 2.4
+*cupsModelNumber: 6000
+*cupsManualCopies: False
+*cupsFilter: "application/vnd.cups-raster 50 rastertolbp6000"
+
+*OpenGroup: General/General
+
+*OpenUI *Resolution/Resolution: PickOne
+*OrderDependency: 10 AnySetup *Resolution
+*DefaultResolution: 600dpi
+*Resolution 600dpi/600 dpi: "<</HWResolution[600 600]/cupsBitsPerColor 1/cupsBitsPerPixel 1/cupsColorSpace 3/cupsColorOrder 0/cupsRowCount 160/cupsRowFeed 0/cupsRowStep 0>>setpagedevice"
+*CloseUI: *Resolution
+
+*OpenUI *PageSize/Media Size: PickOne
+*OrderDependency: 10 AnySetup *PageSize
+*DefaultPageSize: A4
+*PageSize A4/A4: "<</PageSize[595.2 841.68]/ImagingBBox null>>setpagedevice"
+*PageSize Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageSize Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*PageSize Executive/US Executive: "<</PageSize[522 756]/ImagingBBox null>>setpagedevice"
+*PageSize A5/A5: "<</PageSize[419.52 595.2]/ImagingBBox null>>setpagedevice"
+*PageSize B5/B5 (JIS): "<</PageSize[515.76 728.4]/ImagingBBox null>>setpagedevice"
+*PageSize Env10/Envelope #10: "<</PageSize[297.36 684]/ImagingBBox null>>setpagedevice"
+*PageSize EnvDL/Envelope DL: "<</PageSize[311.76 623.52]/ImagingBBox null>>setpagedevice"
+*PageSize EnvC5/Envelope C5: "<</PageSize[459.12 648.96]/ImagingBBox null>>setpagedevice"
+*PageSize EnvMonarch/Envelope Monarch: "<</PageSize[279.36 540]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion/Media Size: PickOne
+*OrderDependency: 10 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion A4/A4: "<</PageSize[595.2 841.68]/ImagingBBox null>>setpagedevice"
+*PageRegion Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageRegion Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*PageRegion Executive/US Executive: "<</PageSize[522 756]/ImagingBBox null>>setpagedevice"
+*PageRegion A5/A5: "<</PageSize[419.52 595.2]/ImagingBBox null>>setpagedevice"
+*PageRegion B5/B5 (JIS): "<</PageSize[515.76 728.4]/ImagingBBox null>>setpagedevice"
+*PageRegion Env10/Envelope #10: "<</PageSize[297.36 684]/ImagingBBox null>>setpagedevice"
+*PageRegion EnvDL/Envelope DL: "<</PageSize[311.76 623.52]/ImagingBBox null>>setpagedevice"
+*PageRegion EnvC5/Envelope C5: "<</PageSize[459.12 648.96]/ImagingBBox null>>setpagedevice"
+*PageRegion EnvMonarch/Envelope Monarch: "<</PageSize[279.36 540]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageRegion
+
+*DefaultImageableArea: A4
+*ImageableArea A4/A4: "14.4 14.4 582.6 827.28"
+*ImageableArea Letter/US Letter: "14.4 14.4 597.96 777.6"
+*ImageableArea Legal/US Legal: "14.4 14.4 597.96 993.6"
+*ImageableArea Executive/US Executive: "14.4 14.4 509.64 741.6"
+*ImageableArea A5/A5: "14.4 14.4 405.96 580.8"
+*ImageableArea B5/B5 (JIS): "14.4 14.4 501.96 714"
+*ImageableArea Env10/Envelope #10: "28.32 28.56 270.12 655.68"
+*ImageableArea EnvDL/Envelope DL: "28.32 28.56 285.48 595.2"
+*ImageableArea EnvC5/Envelope C5: "28.32 28.56 431.4 620.64"
+*ImageableArea EnvMonarch/Envelope Monarch: "28.32 28.56 250.92 511.68"
+
+*DefaultPaperDimension: A4
+*PaperDimension A4/A4: "595.2 841.68"
+*PaperDimension Letter/US Letter: "612 792"
+*PaperDimension Legal/US Legal: "612 1008"
+*PaperDimension Executive/US Executive: "522 756"
+*PaperDimension A5/A5: "419.52 595.2"
+*PaperDimension B5/B5 (JIS): "515.76 728.4"
+*PaperDimension Env10/Envelope #10: "297.36 684"
+*PaperDimension EnvDL/Envelope DL: "311.76 623.52"
+*PaperDimension EnvC5/Envelope C5: "459.12 648.96"
+*PaperDimension EnvMonarch/Envelope Monarch: "279.36 540"
+
+*OpenUI *MediaType/Media Type: PickOne
+*OrderDependency: 20 AnySetup *MediaType
+*DefaultMediaType: Plain
+*MediaType Plain/Plain Paper: "<</MediaType(Plain)/cupsMediaType 1>>setpagedevice"
+*MediaType PlainL/Plain Paper L: "<</MediaType(PlainL)/cupsMediaType 8>>setpagedevice"
+*MediaType Heavy/Heavy Paper: "<</MediaType(Heavy)/cupsMediaType 4>>setpagedevice"
+*MediaType HeavyH/Heavy Paper H: "<</MediaType(HeavyH)/cupsMediaType 5>>setpagedevice"
+*MediaType Transparency/Transparency: "<</MediaType(Transparency)/cupsMediaType 36>>setpagedevice"
+*MediaType Envelope/Envelope: "<</MediaType(Envelope)/cupsMediaType 32>>setpagedevice"
+*CloseUI: *MediaType
+
+*CloseGroup: General
+
+*OpenGroup: PrintQuality/Print Quality
+
+*OpenUI *CaptDarkness/Toner Density: PickOne
+*OrderDependency: 30 AnySetup *CaptDarkness
+*DefaultCaptDarkness: 7
+*CaptDarkness 0/0: "<</cupsInteger1 0>>setpagedevice"
+*CaptDarkness 1/1: "<</cupsInteger1 1>>setpagedevice"
+*CaptDarkness 2/2: "<</cupsInteger1 2>>setpagedevice"
+*CaptDarkness 3/3: "<</cupsInteger1 3>>setpagedevice"
+*CaptDarkness 4/4: "<</cupsInteger1 4>>setpagedevice"
+*CaptDarkness 5/5: "<</cupsInteger1 5>>setpagedevice"
+*CaptDarkness 6/6: "<</cupsInteger1 6>>setpagedevice"
+*CaptDarkness 7/7: "<</cupsInteger1 7>>setpagedevice"
+*CaptDarkness 8/8: "<</cupsInteger1 8>>setpagedevice"
+*CaptDarkness 9/9: "<</cupsInteger1 9>>setpagedevice"
+*CaptDarkness 10/10: "<</cupsInteger1 10>>setpagedevice"
+*CaptDarkness 11/11: "<</cupsInteger1 11>>setpagedevice"
+*CaptDarkness 12/12: "<</cupsInteger1 12>>setpagedevice"
+*CaptDarkness 13/13: "<</cupsInteger1 13>>setpagedevice"
+*CaptDarkness 14/14: "<</cupsInteger1 14>>setpagedevice"
+*CaptDarkness 15/15: "<</cupsInteger1 15>>setpagedevice"
+*CloseUI: *CaptDarkness
+
+*OpenUI *CaptTonerSave/Toner Save: Boolean
+*OrderDependency: 30 AnySetup *CaptTonerSave
+*DefaultCaptTonerSave: False
+*CaptTonerSave False/Off: "<</cupsInteger0 0>>setpagedevice"
+*CaptTonerSave True/On: "<</cupsInteger0 1>>setpagedevice"
+*CloseUI: *CaptTonerSave
+
+*CloseGroup: PrintQuality
+
+*DefaultFont: Courier
+*Font Courier: Standard "(1.05)" Standard ROM
+*Font Courier-Bold: Standard "(1.05)" Standard ROM
+*Font Courier-BoldOblique: Standard "(1.05)" Standard ROM
+*Font Courier-Oblique: Standard "(1.05)" Standard ROM
+*Font Helvetica: Standard "(1.05)" Standard ROM
+*Font Helvetica-Bold: Standard "(1.05)" Standard ROM
+*Font Helvetica-BoldOblique: Standard "(1.05)" Standard ROM
+*Font Helvetica-Oblique: Standard "(1.05)" Standard ROM
+*Font Symbol: Standard "(1.05)" Standard ROM
+*Font Times-Bold: Standard "(1.05)" Standard ROM
+*Font Times-BoldItalic: Standard "(1.05)" Standard ROM
+*Font Times-Italic: Standard "(1.05)" Standard ROM
+*Font Times-Roman: Standard "(1.05)" Standard ROM
+
+*%% End of Canon-LBP6000.ppd

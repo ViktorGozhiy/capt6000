@@ -1,0 +1,116 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 0 0 595 842
+%%Pages: 1
+%%EndComments
+%%Page: 1 1
+
+/mm { 72 mul 25.4 div } def
+/Helvetica findfont 14 scalefont setfont
+
+% ---- frame exactly on the printable-area boundary (14.4 pt inset) ----
+0.5 setlinewidth
+14.4 14.4 moveto 580.88 14.4 lineto 580.88 827.49 lineto 14.4 827.49 lineto
+closepath stroke
+
+% ---- inner frame 10 mm in from the sheet edge ----
+[3 3] 0 setdash 0.4 setlinewidth
+10 mm 10 mm moveto  595.28 10 mm sub 10 mm lineto
+595.28 10 mm sub 841.89 10 mm sub lineto  10 mm 841.89 10 mm sub lineto
+closepath stroke
+[] 0 setdash
+
+% ---- corner labels ----
+/Helvetica-Bold findfont 11 scalefont setfont
+20 820 moveto (TOP-LEFT) show
+480 820 moveto (TOP-RIGHT) show
+20 20 moveto (BOTTOM-LEFT) show
+465 20 moveto (BOTTOM-RIGHT) show
+
+% ---- title ----
+/Helvetica-Bold findfont 22 scalefont setfont
+60 770 moveto (capt6000 driver test page) show
+/Helvetica findfont 12 scalefont setfont
+60 750 moveto (Canon LBP6000 / LBP6018 - CAPT 3 - Hi-SCoA - 600 dpi) show
+
+% ---- horizontal ruler in cm along the top ----
+1 setlinewidth
+/Helvetica findfont 7 scalefont setfont
+0 1 20 {
+  /i exch def
+  i 10 mm mul dup 0 gt {
+    dup 730 moveto 0 -12 rlineto stroke
+    dup 718 moveto i 3 string cvs show
+  } { pop } ifelse
+} for
+
+% ---- vertical ruler in cm along the left ----
+0 1 28 {
+  /i exch def
+  i 10 mm mul dup 0 gt {
+    dup 40 exch moveto 12 0 rlineto stroke
+    dup 54 exch moveto i 3 string cvs show
+  } { pop } ifelse
+} for
+
+% ---- line-width ladder (resolution check) ----
+/Helvetica findfont 10 scalefont setfont
+60 690 moveto (Line widths 0.1 - 1.0 pt:) show
+0 1 9 {
+  /i exch def
+  i 0.1 mul 0.1 add setlinewidth
+  200 i 22 mul add 660 moveto 0 25 rlineto stroke
+} for
+
+% ---- fine horizontal lines ----
+60 640 moveto (Horizontal hairlines:) show
+0.24 setlinewidth
+0 1 9 {
+  /i exch def
+  200 620 i 4 mul add moveto 300 0 rlineto stroke
+} for
+
+% ---- gray ramp ----
+/Helvetica findfont 10 scalefont setfont
+60 580 moveto (Gray ramp 0-100%:) show
+0 1 10 {
+  /i exch def
+  1 i 10 div sub setgray
+  200 i 30 mul add 550 40 25 rectfill
+} for
+0 setgray
+
+% ---- solid black block ----
+60 500 moveto (Solid black + knockout text:) show
+200 480 300 40 rectfill
+1 setgray
+/Helvetica-Bold findfont 20 scalefont setfont
+215 492 moveto (WHITE ON BLACK) show
+0 setgray
+
+% ---- text sizes ----
+/Helvetica findfont 10 scalefont setfont
+60 440 moveto (Text sizes:) show
+6 2 16 {
+  /s exch def
+  /Times-Roman findfont s scalefont setfont
+  200 440 s 8 sub 14 mul 0.5 mul sub moveto
+  (The quick brown fox jumps over the lazy dog - ) show
+  s 4 string cvs show ( pt) show
+} for
+
+% ---- diagonals ----
+0.5 setlinewidth
+14.4 14.4 moveto 580.88 827.49 lineto stroke
+14.4 827.49 moveto 580.88 14.4 lineto stroke
+
+% ---- registration crosses at the corners of the imageable area ----
+1 setlinewidth
+/cross { 2 copy moveto -10 0 rmoveto 20 0 rlineto stroke
+         moveto 0 -10 rmoveto 0 20 rlineto stroke } def
+14.4 14.4 cross
+580.88 14.4 cross
+14.4 827.49 cross
+580.88 827.49 cross
+
+showpage
+%%EOF

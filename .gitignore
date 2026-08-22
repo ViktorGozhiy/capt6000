@@ -1,0 +1,18 @@
+# Build output
+build/
+*.o
+
+# Reference material: clones of third-party GPL-3 projects kept locally
+# while working on the protocol.  They are separate works with their own
+# copyright and are deliberately NOT part of this repository -- see the
+# attribution section of README.md for where to get them.
+reference/
+
+# Generated test artefacts
+testdata/out/
+testdata/*.ras
+testdata/*.capt
+testdata/*.pbm
+testdata/*.png
+testdata/*.bin
+testdata/*.log

@@ -1,0 +1,32 @@
+%!PS-Adobe-3.0
+%%Pages: 3
+/mm { 72 mul 25.4 div } def
+/pagemark {
+  /n exch def
+  0.8 setlinewidth
+  14.4 14.4 moveto 580.88 14.4 lineto 580.88 827.49 lineto 14.4 827.49 lineto
+  closepath stroke
+  /Helvetica-Bold findfont 160 scalefont setfont
+  230 400 moveto n show
+  /Helvetica findfont 18 scalefont setfont
+  60 760 moveto (capt6000 multi-page test - sheet ) show n show ( of 3) show
+  /Helvetica findfont 11 scalefont setfont
+  60 100 moveto (If the sheets come out in order 1, 2, 3 with nothing missing,) show
+  60 84 moveto (page sequencing and the printer page counters agree.) show
+  % edge ticks to spot vertical drift between sheets
+  1 setlinewidth
+  0 1 27 {
+    /i exch def
+    i 10 mm mul dup 20 gt {
+      dup 14.4 exch moveto 14 0 rlineto stroke
+    } { pop } ifelse
+  } for
+  showpage
+} def
+%%Page: 1 1
+(1) pagemark
+%%Page: 2 2
+(2) pagemark
+%%Page: 3 3
+(3) pagemark
+%%EOF
