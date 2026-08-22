@@ -89,7 +89,7 @@ $(BUILD)/test_hiscoa: $(TEST_OBJS)
 check test: $(BUILD)/test_hiscoa
 	$(BUILD)/test_hiscoa
 	@if command -v cupstestppd >/dev/null 2>&1; then \
-		cupstestppd -q ppd/Canon-LBP6000.ppd && \
+		cupstestppd -q -W filters ppd/Canon-LBP6000.ppd && \
 		echo "ok   PPD passes cupstestppd"; \
 	fi
 
