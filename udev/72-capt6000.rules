@@ -1,0 +1,6 @@
+# capt6000 -- the Canon LBP6000/LBP6018 is CAPT-only and must be driven by the
+# capt backend, not the generic usb:// backend.  Stop system-config-printer-udev
+# from auto-creating a broken usb:// queue for it; create the queue with lpadmin.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="04a9", ATTR{idProduct}=="271a", ENV{SYSTEMD_WANTS}=""

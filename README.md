@@ -98,6 +98,23 @@ The `.deb` is written to the parent directory.
 Print options: `PageSize`, `MediaType`, `CaptDarkness` (0–15, default 7),
 `CaptTonerSave`.
 
+### If nothing prints
+
+On Debian and Ubuntu the desktop auto-creates a queue with a `usb://` device
+URI when the printer is plugged in. That generic queue cannot drive a CAPT
+printer — jobs vanish without printing. Check for it:
+
+    lpstat -v
+
+If there is a queue on `usb://…`, delete it and keep the `capt://` one:
+
+    sudo lpadmin -x <that-queue>
+
+The `.deb` ships a udev rule (`72-capt6000.rules`) that stops the auto-queue
+from being created for this model in the first place. From a source build,
+install that rule into `/usr/lib/udev/rules.d/` yourself. The rule matches the
+LBP6000 USB id `04a9:271a`; for an LBP6018 add its id alongside.
+
 ## How this was verified
 
 The protocol is closed, so verification was built so as not to depend on a

@@ -21,6 +21,7 @@ USB_LIBS    := $(shell $(PKG_CONFIG) --libs libusb-1.0)
 
 PREFIX ?= /usr/local
 MANDIR ?= $(PREFIX)/share/man
+UDEVRULESDIR ?= /usr/lib/udev/rules.d
 CUPS_SERVERBIN ?= $(shell cups-config --serverbin 2>/dev/null || echo /usr/lib/cups)
 CUPS_DATADIR   ?= $(shell cups-config --datadir 2>/dev/null || echo /usr/share/cups)
 PPD_DIR        ?= $(CUPS_DATADIR)/model/capt6000
@@ -108,6 +109,8 @@ install: all
 	install -d $(DESTDIR)$(MANDIR)/man1
 	install -m 644 man/captstat.1 man/captdump.1 man/captwire.1 \
 		$(DESTDIR)$(MANDIR)/man1/
+	install -d $(DESTDIR)$(UDEVRULESDIR)
+	install -m 644 udev/72-capt6000.rules $(DESTDIR)$(UDEVRULESDIR)/
 
 uninstall:
 	rm -f $(DESTDIR)$(CUPS_SERVERBIN)/filter/rastertolbp6000
@@ -118,6 +121,7 @@ uninstall:
 	rm -f $(DESTDIR)$(MANDIR)/man1/captstat.1 \
 	      $(DESTDIR)$(MANDIR)/man1/captdump.1 \
 	      $(DESTDIR)$(MANDIR)/man1/captwire.1
+	rm -f $(DESTDIR)$(UDEVRULESDIR)/72-capt6000.rules
 
 clean:
 	rm -rf $(BUILD)

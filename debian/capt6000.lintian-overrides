@@ -3,3 +3,9 @@
 # so mode 0700 is intentional and required, not a packaging mistake.
 capt6000: executable-is-not-world-readable 0700 [usr/lib/cups/backend/capt]
 capt6000: non-standard-executable-perm 0700 != 0755 [usr/lib/cups/backend/capt]
+
+# The udev rule matches the printer by USB id to suppress the desktop's broken
+# auto-queue.  AppStream modalias metadata would only enable software-centre
+# discovery from an indexed repository, which does not apply to a standalone
+# .deb; the udev rule is the functional mechanism.
+capt6000: appstream-metadata-missing-modalias-provide

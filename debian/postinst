@@ -12,6 +12,11 @@ case "$1" in
         elif command -v invoke-rc.d >/dev/null 2>&1; then
             invoke-rc.d cups try-restart >/dev/null 2>&1 || true
         fi
+        # Load the udev rule that keeps the desktop from auto-creating a
+        # generic usb:// queue for this CAPT-only printer.
+        if command -v udevadm >/dev/null 2>&1; then
+            udevadm control --reload-rules >/dev/null 2>&1 || true
+        fi
         ;;
 esac
 

@@ -1,3 +1,11 @@
+capt6000 (1.1) unstable; urgency=medium
+
+  * Ship a udev rule that stops the desktop from auto-creating a generic
+    usb:// queue for the LBP6000, which bypasses the CAPT backend and cannot
+    print.
+
+ -- Viktor Hozhyi <30889176+ViktorGozhiy@users.noreply.github.com>  Sat, 22 Aug 2026 19:14:36 +0300
+
 capt6000 (1.0) unstable; urgency=medium
 
   * Initial release.
