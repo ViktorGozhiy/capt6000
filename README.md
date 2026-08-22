@@ -70,6 +70,24 @@ You need `libcups2-dev`, `libcupsimage2-dev`, `libusb-1.0-0-dev`,
 It installs into `/usr/lib/cups/filter`, `/usr/lib/cups/backend`,
 `/usr/share/cups/model/capt6000`, and `/usr/local/bin`.
 
+## Installing from a .deb package
+
+On Debian and Ubuntu you can skip compiling. Download the latest
+`capt6000_*.deb` from the [releases page][releases] and install it — `apt`
+pulls in the dependencies:
+
+    sudo apt install ./capt6000_1.0_amd64.deb
+
+To build the package yourself instead:
+
+    sudo apt install build-essential debhelper \
+         libcups2-dev libcupsimage2-dev libusb-1.0-0-dev pkg-config
+    dpkg-buildpackage -us -uc -b
+
+The `.deb` is written to the parent directory.
+
+[releases]: https://github.com/ViktorGozhiy/capt6000/releases
+
 ## Setting up a queue
 
     sudo /usr/lib/cups/backend/capt          # see what was found

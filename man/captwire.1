@@ -1,0 +1,34 @@
+.\" captwire.1 -- manual page for captwire
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.TH CAPTWIRE 1 "August 2026" "capt6000 1.0" "capt6000"
+.SH NAME
+captwire \- decode a raw CAPT wire capture into readable commands
+.SH SYNOPSIS
+.B captwire
+.RB [ \-v ]
+.I capture
+.SH DESCRIPTION
+.B captwire
+reads a raw CAPT byte stream \(em such as the one the backend writes when
+.B CAPT_SINK
+points at a file \(em and prints each protocol packet as a command name
+with its payload length, decoding the sub\-commands of
+.B SET_PARMS
+and hex\-dumping short payloads.  A summary of the page data volume is
+printed at the end.
+.SH OPTIONS
+.TP
+.B \-v
+Verbose: also list every
+.B PRINT_DATA
+packet instead of only counting them.
+.SH EXIT STATUS
+Returns 0 on success, 2 if no capture file was given, and 1 on a read
+error.
+.SH SEE ALSO
+.BR captdump (1),
+.BR captstat (1)
+.SH AUTHOR
+Viktor Hozhyi.  Part of capt6000,
+.UR https://github.com/ViktorGozhiy/capt6000
+.UE .

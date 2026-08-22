@@ -1,0 +1,37 @@
+.\" captdump.1 -- manual page for captdump
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.TH CAPTDUMP 1 "August 2026" "capt6000 1.0" "capt6000"
+.SH NAME
+captdump \- decode a capt6000 record stream
+.SH SYNOPSIS
+.B captdump
+.RB [ \-o
+.IR outdir ]
+.I stream
+.SH DESCRIPTION
+.B captdump
+reads a capt6000 intermediate record stream \(em the output of the
+.B rastertolbp6000
+filter \(em and prints the page parameters, the Hi\-SCoA parameters and a
+per\-band decode summary in human readable form.
+.PP
+With
+.BR \-o ,
+every page is additionally decompressed back into a PBM image written as
+.IR outdir /page\-NNN.pbm ,
+so the raster the printer would receive can actually be looked at.
+.SH OPTIONS
+.TP
+.BI \-o " outdir"
+Write each decoded page as a PBM image into
+.IR outdir .
+.SH EXIT STATUS
+Returns 0 on success, 2 if no input file was given, and 1 on a read error
+or if the file is not a capt6000 stream.
+.SH SEE ALSO
+.BR captwire (1),
+.BR captstat (1)
+.SH AUTHOR
+Viktor Hozhyi.  Part of capt6000,
+.UR https://github.com/ViktorGozhiy/capt6000
+.UE .

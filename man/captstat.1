@@ -1,0 +1,37 @@
+.\" captstat.1 -- manual page for captstat
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.TH CAPTSTAT 1 "August 2026" "capt6000 1.0" "capt6000"
+.SH NAME
+captstat \- report the status of a Canon CAPT printer
+.SH SYNOPSIS
+.B captstat
+.RB [ \-w ]
+.RB [ \-r ]
+.RB [ \-t ]
+.SH DESCRIPTION
+.B captstat
+opens the first Canon CAPT printer on the USB bus and prints its device
+ID, model, raw status words, the decoded status flags and the page
+counters.  It sends only status queries and never prints anything, so it
+is safe to run against a printer at any time.
+.SH OPTIONS
+.TP
+.B \-w
+Watch: keep polling and reprinting the status once a second until
+interrupted.
+.TP
+.B \-r
+Reset the USB device before reading its status.
+.TP
+.B \-t
+Trace: print every CAPT packet exchanged with the printer.
+.SH EXIT STATUS
+Returns 0 on success and 1 if no printer could be opened or a status
+query failed.
+.SH SEE ALSO
+.BR captdump (1),
+.BR captwire (1)
+.SH AUTHOR
+Viktor Hozhyi.  Part of capt6000,
+.UR https://github.com/ViktorGozhiy/capt6000
+.UE .
