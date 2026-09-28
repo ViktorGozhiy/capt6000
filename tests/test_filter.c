@@ -190,7 +190,7 @@ static void run_case(const struct placement_case *c)
  * top left corner of the sheet.  A raster pixel at page position
  * (x pt, y pt from the bottom) lands at window pixel
  * (x * 600/72 - 120, (841.89 - y) * 600/72 - 120).  Horizontal placement
- * is done in whole bytes, hence the 8 pixel slack.
+ * is done in whole bytes, so it can be up to 4 pixels off.
  */
 static const struct placement_case cases[] = {
 	{
@@ -205,14 +205,21 @@ static const struct placement_case cases[] = {
 		"image centered on sheet",
 		3000, 4800, { 117.64f, 132.94f, 477.64f, 708.94f },
 		{ 0, 0, 3000, 4800 },
-		{ 860, 988, 3860, 5788 }, 8, 1
+		{ 860, 988, 3860, 5788 }, 4, 1
+	},
+	{
+		/* imagetoraster: an image placed near the left edge. */
+		"image near left edge",
+		1200, 1200, { 50.0f, 600.0f, 194.0f, 744.0f },
+		{ 0, 0, 1200, 1200 },
+		{ 297, 696, 1497, 1896 }, 4, 1
 	},
 	{
 		/* A raster covering the whole sheet, past the imaging area. */
 		"raster larger than window",
 		4961, 7016, { 0.0f, 0.0f, 595.28f, 841.89f },
 		{ 400, 400, 1200, 1200 },
-		{ 280, 280, 1080, 1080 }, 8, 1
+		{ 280, 280, 1080, 1080 }, 4, 1
 	},
 	{
 		/* A rasterizer that does not say where the raster goes. */
