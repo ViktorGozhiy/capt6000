@@ -18,6 +18,7 @@
  */
 
 #include <fcntl.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,7 +68,9 @@ static int write_raster(const char *path, const struct placement_case *c)
 	h.cupsPageSize[1] = 841.89f;
 	memcpy(h.cupsImagingBBox, c->imaging_bbox, sizeof(h.cupsImagingBBox));
 	for (x = 0; x < 4; ++x)
-		h.ImagingBoundingBox[x] = (unsigned) c->imaging_bbox[x];
+		if (c->imaging_bbox[x] >= 0 && c->imaging_bbox[x] < 10000)
+			h.ImagingBoundingBox[x] =
+				(unsigned) c->imaging_bbox[x];
 	h.cupsWidth = c->width;
 	h.cupsHeight = c->height;
 	h.cupsBitsPerColor = 1;
@@ -84,6 +87,8 @@ static int write_raster(const char *path, const struct placement_case *c)
 	r = cupsRasterOpen(fd, CUPS_RASTER_WRITE_COMPRESSED);
 	line = calloc(1, h.cupsBytesPerLine);
 	if (!r || !line || !cupsRasterWriteHeader2(r, &h)) {
+		if (r)
+			cupsRasterClose(r);
 		free(line);
 		close(fd);
 		return -1;
@@ -117,6 +122,10 @@ static int black_area(const char *path, struct rect *out)
 	}
 	bpl = (w + 7) / 8;
 	line = malloc(bpl);
+	if (!line) {
+		fclose(f);
+		return -1;
+	}
 	out->left = out->top = -1;
 	out->right = out->bottom = -1;
 	for (y = 0; y < h; ++y) {
@@ -222,9 +231,30 @@ static const struct placement_case cases[] = {
 		{ 280, 280, 1080, 1080 }, 4, 1
 	},
 	{
+		/* A raster lying wholly in the left margin prints nothing. */
+		"raster in the margin",
+		80, 80, { 0.0f, 400.0f, 9.6f, 409.6f },
+		{ 0, 0, 80, 80 },
+		{ -1, -1, -1, -1 }, 0, 0
+	},
+	{
 		/* A rasterizer that does not say where the raster goes. */
 		"no imaging bounding box",
 		3000, 4800, { 0.0f, 0.0f, 0.0f, 0.0f },
+		{ 0, 0, 3000, 4800 },
+		{ 864, 0, 3864, 4800 }, 0, 0
+	},
+	{
+		/* A damaged header is treated as having no bounding box. */
+		"bounding box is NaN",
+		3000, 4800, { NAN, 132.94f, 477.64f, 708.94f },
+		{ 0, 0, 3000, 4800 },
+		{ 864, 0, 3864, 4800 }, 0, 0
+	},
+	{
+		/* A bounding box far outside the sheet. */
+		"bounding box off the sheet",
+		3000, 4800, { 1e30f, 132.94f, 2e30f, 708.94f },
 		{ 0, 0, 3000, 4800 },
 		{ 864, 0, 3864, 4800 }, 0, 0
 	},

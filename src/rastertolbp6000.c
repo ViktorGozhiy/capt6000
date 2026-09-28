@@ -231,10 +231,12 @@ static void raster_origin(const cups_page_header2_t *header,
 			  long *x_bytes, long *y_lines)
 {
 	const float *bbox = header->cupsImagingBBox;
+	const float *page = header->cupsPageSize;
 
-	if (bbox[2] <= bbox[0] || bbox[3] <= bbox[1] ||
-	    header->cupsPageSize[1] <= 0) {
-		/* No position given: center horizontally, start at the top. */
+	/* Written so that a NaN anywhere makes the bounding box invalid. */
+	if (!(bbox[0] >= 0 && bbox[2] > bbox[0] && bbox[2] <= page[0] &&
+	      bbox[1] >= 0 && bbox[3] > bbox[1] && bbox[3] <= page[1])) {
+		/* No usable position: center horizontally, start at the top. */
 		*x_bytes = ((long) geom->line_size -
 			    (long) header->cupsBytesPerLine) / 2;
 		*y_lines = 0;
@@ -242,7 +244,7 @@ static void raster_origin(const cups_page_header2_t *header,
 	}
 	*x_bytes = lround((bbox[0] * header->HWResolution[0] / 72.0 -
 			   geom->bound_a) / 8.0);
-	*y_lines = lround((header->cupsPageSize[1] - bbox[3]) *
+	*y_lines = lround((page[1] - bbox[3]) *
 			  header->HWResolution[1] / 72.0 - geom->bound_a);
 }
 
@@ -362,7 +364,7 @@ static int process_page(cups_raster_t *raster, cups_page_header2_t *header,
 		for (i = 0; i < n; ++i) {
 			long src_line = (long) (line + i) - y_lines;
 
-			if (src_line < 0 ||
+			if (copy_bytes == 0 || src_line < 0 ||
 			    src_line >= (long) header->cupsHeight)
 				continue;	/* outside the raster: white */
 			while ((long) read_lines <= src_line) {
