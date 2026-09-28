@@ -1,3 +1,11 @@
+capt6000 (1.2) unstable; urgency=medium
+
+  * Place the raster on the page where the rasterizer put it
+    (cupsImagingBBox).  An image printed directly through CUPS came out
+    at the top of the sheet instead of where imagetoraster placed it.
+
+ -- Viktor Hozhyi <30889176+ViktorGozhiy@users.noreply.github.com>  Mon, 28 Sep 2026 13:56:06 +0300
+
 capt6000 (1.1) unstable; urgency=medium
 
   * Ship a udev rule that stops the desktop from auto-creating a generic
