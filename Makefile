@@ -35,6 +35,7 @@ DUMP_OBJS    := $(BUILD)/captdump.o $(BUILD)/hiscoa_dec.o $(BUILD)/hiscoa_enc.o
 STAT_OBJS    := $(BUILD)/captstat.o $(BUILD)/capt_usb.o
 WIRE_OBJS    := $(BUILD)/captwire.o
 TEST_OBJS    := $(BUILD)/test_hiscoa.o $(BUILD)/hiscoa_enc.o $(BUILD)/hiscoa_dec.o
+FILTER_TEST_OBJS := $(BUILD)/test_filter.o
 
 TARGETS := $(BUILD)/rastertolbp6000 $(BUILD)/capt $(BUILD)/captdump \
            $(BUILD)/captstat $(BUILD)/captwire
@@ -67,11 +68,14 @@ $(BUILD)/captwire.o: tools/captwire.c | $(BUILD)
 $(BUILD)/test_hiscoa.o: tests/test_hiscoa.c | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(BUILD)/test_filter.o: tests/test_filter.c | $(BUILD)
+	$(CC) $(CFLAGS) $(CUPS_CFLAGS) -c -o $@ $<
+
 $(BUILD)/%.o: src/%.c | $(BUILD)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BUILD)/rastertolbp6000: $(FILTER_OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(CUPS_LIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(CUPS_LIBS) -lm
 
 $(BUILD)/capt: $(BACKEND_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(USB_LIBS)
@@ -88,8 +92,13 @@ $(BUILD)/captwire: $(WIRE_OBJS)
 $(BUILD)/test_hiscoa: $(TEST_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-check test: $(BUILD)/test_hiscoa
+$(BUILD)/test_filter: $(FILTER_TEST_OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(CUPS_LIBS)
+
+check test: $(BUILD)/test_hiscoa $(BUILD)/test_filter \
+            $(BUILD)/rastertolbp6000 $(BUILD)/captdump
 	$(BUILD)/test_hiscoa
+	$(BUILD)/test_filter
 	@if command -v cupstestppd >/dev/null 2>&1; then \
 		cupstestppd -q -W filters ppd/Canon-LBP6000.ppd && \
 		echo "ok   PPD passes cupstestppd"; \

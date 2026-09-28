@@ -28,6 +28,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <math.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,6 +217,48 @@ static int emit_band(struct band_buffers *b, unsigned line_size,
 	return write_record(CAPTREC_BAND, b->comp, (uint32_t) size);
 }
 
+/*
+ * Work out where the top left corner of the raster lands in the
+ * printer's imaging area, which starts bound_a pixels in from the top
+ * left corner of the sheet.  The rasterizer says where the raster sits
+ * on the sheet in cupsImagingBBox: Ghostscript renders exactly the
+ * imageable area, but imagetoraster renders only the image and places
+ * it by the bounding box.  The column is rounded to whole bytes; it is
+ * negative when the raster starts outside the imaging area.
+ */
+static void raster_origin(const cups_page_header2_t *header,
+			  const struct page_geometry *geom,
+			  long *x_bytes, long *y_lines)
+{
+	const float *bbox = header->cupsImagingBBox;
+
+	if (bbox[2] <= bbox[0] || bbox[3] <= bbox[1] ||
+	    header->cupsPageSize[1] <= 0) {
+		/* No position given: center horizontally, start at the top. */
+		*x_bytes = ((long) geom->line_size -
+			    (long) header->cupsBytesPerLine) / 2;
+		*y_lines = 0;
+		return;
+	}
+	*x_bytes = lround((bbox[0] * header->HWResolution[0] / 72.0 -
+			   geom->bound_a) / 8.0);
+	*y_lines = lround((header->cupsPageSize[1] - bbox[3]) *
+			  header->HWResolution[1] / 72.0 - geom->bound_a);
+}
+
+static int read_raster_line(cups_raster_t *raster,
+			    const cups_page_header2_t *header, uint8_t *line,
+			    unsigned page_no, unsigned line_no)
+{
+	if (cupsRasterReadPixels(raster, line, header->cupsBytesPerLine)
+	    != header->cupsBytesPerLine) {
+		fprintf(stderr, "ERROR: capt6000: truncated raster on page %u "
+				"line %u\n", page_no, line_no);
+		return -1;
+	}
+	return 0;
+}
+
 static int process_page(cups_raster_t *raster, cups_page_header2_t *header,
 			unsigned page_no, struct band_buffers *bufs)
 {
@@ -228,7 +271,9 @@ static int process_page(cups_raster_t *raster, cups_page_header2_t *header,
 	unsigned line_size, num_lines;
 	unsigned copy_bytes, dst_off, src_off;
 	unsigned line;
+	unsigned read_lines = 0;
 	unsigned emitted = 0;
+	long x_bytes, y_lines;
 
 	geom = page_geometry_find(header->cupsPageSizeName);
 	if (!geom) {
@@ -267,23 +312,24 @@ static int process_page(cups_raster_t *raster, cups_page_header2_t *header,
 		geom->paper_width, geom->paper_height,
 		line_size, num_lines, band_lines);
 
-	if (header->cupsBytesPerLine != line_size)
-		fprintf(stderr, "DEBUG: capt6000: raster is %u bytes/line, "
-				"printer wants %u; centering\n",
-			header->cupsBytesPerLine, line_size);
-	if (header->cupsHeight != num_lines)
-		fprintf(stderr, "DEBUG: capt6000: raster is %u lines, printer "
-				"wants %u\n", header->cupsHeight, num_lines);
+	raster_origin(header, geom, &x_bytes, &y_lines);
 
-	/* Fit the raster into the printer's imaging area, centered. */
-	if (header->cupsBytesPerLine <= line_size) {
-		copy_bytes = header->cupsBytesPerLine;
-		dst_off = (line_size - copy_bytes) / 2;
-		src_off = 0;
-	} else {
-		copy_bytes = line_size;
-		dst_off = 0;
-		src_off = (header->cupsBytesPerLine - line_size) / 2;
+	if (header->cupsBytesPerLine != line_size ||
+	    header->cupsHeight != num_lines || x_bytes != 0 || y_lines != 0)
+		fprintf(stderr, "DEBUG: capt6000: raster is %u bytes/line x %u "
+				"lines, printer wants %u x %u; placing it at "
+				"byte %ld, line %ld\n",
+			header->cupsBytesPerLine, header->cupsHeight,
+			line_size, num_lines, x_bytes, y_lines);
+
+	/* The part of each raster line that falls into the imaging area. */
+	dst_off = x_bytes > 0 ? (unsigned) x_bytes : 0;
+	src_off = x_bytes < 0 ? (unsigned) -x_bytes : 0;
+	copy_bytes = 0;
+	if (src_off < header->cupsBytesPerLine && dst_off < line_size) {
+		copy_bytes = header->cupsBytesPerLine - src_off;
+		if (copy_bytes > line_size - dst_off)
+			copy_bytes = line_size - dst_off;
 	}
 
 	if (buffers_alloc(bufs, header->cupsBytesPerLine,
@@ -314,15 +360,17 @@ static int process_page(cups_raster_t *raster, cups_page_header2_t *header,
 
 		memset(bufs->band, 0, bufs->band_alloc);
 		for (i = 0; i < n; ++i) {
-			if (line + i >= header->cupsHeight)
-				continue;	/* short raster: pad white */
-			if (cupsRasterReadPixels(raster, bufs->line,
-						 header->cupsBytesPerLine)
-			    != header->cupsBytesPerLine) {
-				fprintf(stderr, "ERROR: capt6000: truncated "
-						"raster on page %u line %u\n",
-					page_no, line + i);
-				return -1;
+			long src_line = (long) (line + i) - y_lines;
+
+			if (src_line < 0 ||
+			    src_line >= (long) header->cupsHeight)
+				continue;	/* outside the raster: white */
+			while ((long) read_lines <= src_line) {
+				if (read_raster_line(raster, header,
+						     bufs->line, page_no,
+						     read_lines) < 0)
+					return -1;
+				++read_lines;
 			}
 			memcpy(bufs->band + (size_t) i * line_size + dst_off,
 			       bufs->line + src_off, copy_bytes);
@@ -337,7 +385,7 @@ static int process_page(cups_raster_t *raster, cups_page_header2_t *header,
 	}
 
 	/* Drain any raster lines beyond the printable area. */
-	for (; line < header->cupsHeight; ++line)
+	for (; read_lines < header->cupsHeight; ++read_lines)
 		cupsRasterReadPixels(raster, bufs->line,
 				     header->cupsBytesPerLine);
 
